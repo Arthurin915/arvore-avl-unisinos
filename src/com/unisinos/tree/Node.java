@@ -2,33 +2,59 @@ package com.unisinos.tree;
 
 public class Node {
 
-    private Object data;
+    private int val;
+
+    private int height;
+
+    private int balance;
 
     private Node lNode;
 
     private Node rNode;
 
-    public Node getlNode() {
+    public Node(Integer val) {
+        this.val = val;
+        lNode = null;
+        rNode = null;
+    }
+
+    public Node getLNode() {
         return lNode;
     }
 
-    public void setlNode(Node lNode) {
+    public void setLNode(Node lNode) {
         this.lNode = lNode;
     }
 
-    public Node getrNode() {
+    public Node getRNode() {
         return rNode;
     }
 
-    public void setrNode(Node rNode) {
+    public void setRNode(Node rNode) {
         this.rNode = rNode;
     }
 
-    public Object getData() {
-        return data;
+    public int getVal() {
+        return val;
     }
 
-    public void setData(Object data) {
-        this.data = data;
+    public void setVal(int val) {
+        this.val = val;
+    }
+
+    public int getHeight() {
+        return height;
+    }
+
+    public void setHeight(int height) {
+        this.height = height;
+    }
+
+    public int getBalance() {
+        return balance;
+    }
+
+    public void setBalance(int balance) {
+        this.balance = balance;
     }
 }
