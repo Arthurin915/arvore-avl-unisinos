@@ -8,30 +8,30 @@ public class Node {
 
     private int balance;
 
-    private Node lNode;
+    private Node left;
 
-    private Node rNode;
+    private Node right;
 
     public Node(Integer val) {
         this.val = val;
-        lNode = null;
-        rNode = null;
+        left = null;
+        right = null;
     }
 
-    public Node getLNode() {
-        return lNode;
+    public Node getLeft() {
+        return left;
     }
 
-    public void setLNode(Node lNode) {
-        this.lNode = lNode;
+    public void setLeft(Node lNode) {
+        this.left = lNode;
     }
 
-    public Node getRNode() {
-        return rNode;
+    public Node getRight() {
+        return right;
     }
 
-    public void setRNode(Node rNode) {
-        this.rNode = rNode;
+    public void setRight(Node rNode) {
+        this.right = rNode;
     }
 
     public int getVal() {
