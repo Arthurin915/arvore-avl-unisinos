@@ -69,6 +69,62 @@ class BinaryTreeTest {
 		Assert.isTrue(root.getRight().getVal() == 5);
 		Assert.isTrue(root.getRight().getRight().getVal() == 6);
 	}
+
+	@Test
+	void isBalanced_deleting_right() {
+		// Arrange
+		BinaryTree binaryTree = new BinaryTree();
+
+		// Act
+		binaryTree.insert(1);
+		binaryTree.insert(2);
+		binaryTree.insert(3);
+		binaryTree.insert(4);
+		binaryTree.insert(5);
+		binaryTree.insert(6);
+		binaryTree.insert(7);
+
+		// Assert
+		Node rootBeforeDelete = binaryTree.getRoot();
+
+		Assert.isTrue(rootBeforeDelete.getRight().getVal() == 6);
+
+		// Act
+		binaryTree.delete(6);
+
+		// Assert
+		Assert.isTrue(binaryTree.isBalanced());
+
+		Node rootAfterDelete = binaryTree.getRoot();
+		Assert.isTrue(rootAfterDelete.getRight().getVal() == 7);
+	}
+
+	@Test
+	void isBalanced_deleting_left() {
+		// Arrange
+		BinaryTree binaryTree = new BinaryTree();
+
+		// Act
+		binaryTree.insert(1);
+		binaryTree.insert(2);
+		binaryTree.insert(3);
+		binaryTree.insert(4);
+		binaryTree.insert(5);
+		binaryTree.insert(6);
+		binaryTree.insert(7);
+
+		// Act
+		binaryTree.delete(1);
+		binaryTree.delete(2);
+		binaryTree.delete(3);
+
+		// Assert
+		Assert.isTrue(binaryTree.isBalanced());
+		final Node root = binaryTree.getRoot();
+
+		Assert.isTrue(root.getLeft() == null);
+	}
+
 	@Test
 	void inOrder() {
 		// Arrange

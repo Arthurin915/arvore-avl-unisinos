@@ -2,19 +2,22 @@ package com.unisinos.trabalho.packages.generic;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 public class BinaryTree {
 
 	private Node root;
 
+	public Node getRoot() {
+		return root;
+	}
+
 	public Node insert(int val) {
 		if (this.root == null) {
-			Node root = new Node(val);
-			setRoot(root);
+			this.root = new Node(val);
 			return root;
 		} else {
-			Node root = insert(this.root, val);
-			setRoot(root);
+			this.root = insert(this.root, val);
 			return root;
 		}
 	}
@@ -43,17 +46,29 @@ public class BinaryTree {
 			node.setLeft(insert(node.getLeft(), val));
 		} else if (val > node.getVal()) {
 			node.setRight(insert(node.getRight(), val));
-			// No Duplicates
 		} else return node;
 
-		// Set node Height
+		return checkTreeBalance(node, val);
+
+	}
+
+	private Node checkTreeBalance(Node node, int val) {
+		// Seta a altura do nodo
 		node.setHeight(height(node));
 
-		// Set node Balance
+		// pega o balance do nodo
 		int balance = getBalance(node);
 
-		// If this node becomes unbalanced, then there
-		// are 4 cases Left Left Case
+		// Checa se é necessário balancear
+		if (Math.abs(balance) > 1) {
+			return balanceTree(node, val, balance);
+		}
+
+		return node;
+	}
+
+	private Node balanceTree(Node node, int val, int balance) {
+		// Left Left Case
 		if (balance > 1 && val < node.getLeft().getVal())
 			return rightRotate(node);
 
@@ -68,11 +83,53 @@ public class BinaryTree {
 		}
 
 		// Right Left Case
-		if (balance < -1 && val < node.getRight().getVal()) {
+		if (balance  < -1 && val < node.getRight().getVal()) {
 			node.setRight(rightRotate(node.getRight()));
 			return leftRotate(node);
 		}
 
+		return node;
+	}
+
+	public Node delete(int val) {
+		return delete(this.root, val);
+	}
+
+	private Node delete(Node node, int val) {
+		if (node == null) return null;
+
+		// Deleta à esquerda
+		if (val < node.getVal()) node.setLeft(delete(node.getLeft(), val));
+		// Deleta à direita
+		else if (val > node.getVal()) node.setRight(delete(node.getRight(), val));
+		// Nodo a ser deletado
+		else {
+			// Caso nodo só tem um ou nenhum filho
+			if (node.getLeft() == null || node.getRight() == null) {
+				// Seta o único filho ou null encima do nodo
+				node = Optional.ofNullable(node.getLeft()).orElse(node.getRight());
+			}
+			// Tem dois filhos
+			else {
+				// Pega o menor valor da direita do nodo
+				final Node leftMostNode = getLeftMostNode(node.getRight());
+
+				// Copia o valor da referencia
+				node.setVal(leftMostNode.getVal());
+
+				// Deleta o valor original
+				node.setRight(delete(node.getRight(), node.getVal()));
+			}
+		}
+
+		// Se era o ultimo nodo
+		if (node == null) return null;
+
+		return checkTreeBalance(node, val);
+	}
+
+	private Node getLeftMostNode(Node node) {
+		if (node.getLeft() != null) return getLeftMostNode(node);
 		return node;
 	}
 
@@ -86,14 +143,12 @@ public class BinaryTree {
 		Node leftNode = node.getLeft();
 		Node leftRightNode = leftNode.getRight();
 
-		// Perform rotation
 		leftNode.setRight(node);
 		node.setLeft(leftRightNode);
 
 		node.setHeight(height(node));
 		leftNode.setHeight(height(node));
 
-		// return Root
 		return leftNode;
 	}
 
@@ -101,14 +156,12 @@ public class BinaryTree {
 		Node rightNode = node.getRight();
 		Node rightLeftNode = rightNode.getLeft();
 
-		// Perform rotation
 		rightNode.setLeft(node);
 		node.setRight(rightLeftNode);
 
 		node.setHeight(height(node));
 		rightNode.setHeight(height(rightNode));
 
-		// Return Root
 		return rightNode;
 	}
 
@@ -127,11 +180,4 @@ public class BinaryTree {
 		return 1 + Math.max(height(node.getLeft()), height(node.getRight()));
 	}
 
-	public Node getRoot() {
-		return root;
-	}
-
-	public void setRoot(Node root) {
-		this.root = root;
-	}
 }

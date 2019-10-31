@@ -12,10 +12,22 @@ public class Node {
 
     private Node right;
 
-    public Node(Integer val) {
+    public Node(int val) {
         this.val = val;
         left = null;
         right = null;
+    }
+
+    public Node(int val, int height, int balance, Node left, Node right) {
+        this.val = val;
+        this.height = height;
+        this.balance = balance;
+        this.left = left;
+        this.right = right;
+    }
+
+    public Node copyNode() {
+        return new Node(val, height, balance, left, right);
     }
 
     public Node getLeft() {
@@ -57,4 +69,5 @@ public class Node {
     public void setBalance(int balance) {
         this.balance = balance;
     }
+
 }
