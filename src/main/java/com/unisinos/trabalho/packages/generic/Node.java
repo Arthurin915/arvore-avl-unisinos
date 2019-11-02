@@ -2,7 +2,7 @@ package com.unisinos.trabalho.packages.generic;
 
 public class Node {
 
-    private int val;
+    private INodeValue key;
 
     private int height;
 
@@ -12,22 +12,10 @@ public class Node {
 
     private Node right;
 
-    public Node(int val) {
-        this.val = val;
+    public Node(INodeValue key) {
+        this.key = key;
         left = null;
         right = null;
-    }
-
-    public Node(int val, int height, int balance, Node left, Node right) {
-        this.val = val;
-        this.height = height;
-        this.balance = balance;
-        this.left = left;
-        this.right = right;
-    }
-
-    public Node copyNode() {
-        return new Node(val, height, balance, left, right);
     }
 
     public Node getLeft() {
@@ -46,12 +34,12 @@ public class Node {
         this.right = rNode;
     }
 
-    public int getVal() {
-        return val;
+    public INodeValue getKey() {
+        return key;
     }
 
-    public void setVal(int val) {
-        this.val = val;
+    public void setKey(INodeValue key) {
+        this.key = key;
     }
 
     public int getHeight() {

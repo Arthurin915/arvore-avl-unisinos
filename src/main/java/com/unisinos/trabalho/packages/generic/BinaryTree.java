@@ -12,7 +12,7 @@ public class BinaryTree {
 		return root;
 	}
 
-	public Node insert(int val) {
+	public Node insert(INodeValue val) {
 		if (this.root == null) {
 			this.root = new Node(val);
 			return root;
@@ -22,8 +22,12 @@ public class BinaryTree {
 		}
 	}
 
-	public List<Integer> inOrder() {
-		List<Integer> inOrderList = new ArrayList<>();
+	public Node delete(INodeValue val) {
+		return delete(this.root, val);
+	}
+
+	public List<INodeValue> inOrder() {
+		List<INodeValue> inOrderList = new ArrayList<>();
 		if (root == null) {
 			return inOrderList;
 		}
@@ -31,20 +35,60 @@ public class BinaryTree {
 		return inOrderList;
 	}
 
-	private void inOrder(Node node, List<Integer> inOrderList) {
+	public INodeValue searchBy(INodeSearchTerm searchTerm) {
+		return searchBy(root, searchTerm);
+	}
+
+	public List<INodeValue> searchListBy(INodeSearchTerm searchTerm) {
+		final ArrayList<INodeValue> foundNodes = new ArrayList<>();
+		searchListBy(root, searchTerm, foundNodes);
+		return foundNodes;
+	}
+
+	private INodeValue searchBy(Node node, INodeSearchTerm searchTerm) {
+		if (node == null) return null;
+
+		final INodeValue key = node.getKey();
+
+		if (searchTerm.compareTo(key) < 0) {
+			return searchBy(node.getLeft(), searchTerm);
+		} else if (searchTerm.compareTo(key) > 0) {
+			return searchBy(node.getRight(), searchTerm);
+		}
+
+		return key;
+	}
+
+	private void searchListBy(Node node, INodeSearchTerm searchTerm, ArrayList<INodeValue> foundNodes) {
+		if (node == null) return;
+
+		final INodeValue key = node.getKey();
+
+		if (searchTerm.isValid(key)) {
+			foundNodes.add(node.getKey());
+			searchListBy(node.getLeft(), searchTerm, foundNodes);
+			searchListBy(node.getRight(), searchTerm, foundNodes);
+		} else if (searchTerm.compareTo(key) < 0) {
+			searchListBy(node.getLeft(), searchTerm, foundNodes);
+		} else if (searchTerm.compareTo(key) > 0) {
+			searchListBy(node.getRight(), searchTerm, foundNodes);
+		}
+	}
+
+	private void inOrder(Node node, List<INodeValue> inOrderList) {
 		if (node != null) {
 			inOrder(node.getLeft(), inOrderList);
-			inOrderList.add(node.getVal());
+			inOrderList.add(node.getKey());
 			inOrder(node.getRight(), inOrderList);
 		}
 	}
 
-	private Node insert(Node node, int val) {
+	private Node insert(Node node, INodeValue val) {
 		if (node == null) return new Node(val);
 
-		if (val < node.getVal()) {
+		if (node.getKey().compareTo(val) > 0) {
 			node.setLeft(insert(node.getLeft(), val));
-		} else if (val > node.getVal()) {
+		} else if (node.getKey().compareTo(val) < 0) {
 			node.setRight(insert(node.getRight(), val));
 		} else return node;
 
@@ -52,7 +96,7 @@ public class BinaryTree {
 
 	}
 
-	private Node checkTreeBalance(Node node, int val) {
+	private Node checkTreeBalance(Node node, INodeValue val) {
 		// Seta a altura do nodo
 		node.setHeight(height(node));
 
@@ -67,23 +111,23 @@ public class BinaryTree {
 		return node;
 	}
 
-	private Node balanceTree(Node node, int val, int balance) {
+	private Node balanceTree(Node node, INodeValue val, int balance) {
 		// Left Left Case
-		if (balance > 1 && val < node.getLeft().getVal())
+		if (balance > 1 && val.compareTo(node.getLeft().getKey()) < 0)
 			return rightRotate(node);
 
 		// Right Right Case
-		if (balance < -1 && val > node.getRight().getVal())
+		if (balance < -1 && val.compareTo(node.getRight().getKey()) > 0)
 			return leftRotate(node);
 
 		// Left Right Case
-		if (balance > 1 && val > node.getLeft().getVal()) {
+		if (balance > 1 && val.compareTo(node.getLeft().getKey()) > 0) {
 			node.setLeft(leftRotate(node.getLeft()));
 			return rightRotate(node);
 		}
 
 		// Right Left Case
-		if (balance  < -1 && val < node.getRight().getVal()) {
+		if (balance  < -1 && val.compareTo(node.getRight().getKey()) < 0) {
 			node.setRight(rightRotate(node.getRight()));
 			return leftRotate(node);
 		}
@@ -91,17 +135,13 @@ public class BinaryTree {
 		return node;
 	}
 
-	public Node delete(int val) {
-		return delete(this.root, val);
-	}
-
-	private Node delete(Node node, int val) {
+	private Node delete(Node node, INodeValue val) {
 		if (node == null) return null;
 
 		// Deleta à esquerda
-		if (val < node.getVal()) node.setLeft(delete(node.getLeft(), val));
+		if (val.compareTo(node.getKey()) < 0) node.setLeft(delete(node.getLeft(), val));
 		// Deleta à direita
-		else if (val > node.getVal()) node.setRight(delete(node.getRight(), val));
+		else if (val.compareTo(node.getKey()) > 0) node.setRight(delete(node.getRight(), val));
 		// Nodo a ser deletado
 		else {
 			// Caso nodo só tem um ou nenhum filho
@@ -115,10 +155,10 @@ public class BinaryTree {
 				final Node leftMostNode = getLeftMostNode(node.getRight());
 
 				// Copia o valor da referencia
-				node.setVal(leftMostNode.getVal());
+				node.setKey(leftMostNode.getKey());
 
 				// Deleta o valor original
-				node.setRight(delete(node.getRight(), node.getVal()));
+				node.setRight(delete(node.getRight(), node.getKey()));
 			}
 		}
 
