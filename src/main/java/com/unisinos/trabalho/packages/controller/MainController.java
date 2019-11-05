@@ -6,6 +6,7 @@ import com.unisinos.trabalho.packages.generic.BinaryTree;
 import com.unisinos.trabalho.packages.generic.INodeValue;
 import com.unisinos.trabalho.packages.service.TreeService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -39,7 +40,8 @@ public class MainController {
 	}
 
 	@GetMapping("/tree/filter-birthdate")
-	public ResponseEntity<List<INodeValue>> filterBirthdateTree(@RequestParam("startDate") LocalDate startDate, @RequestParam("endDate") LocalDate endDate) {
+	public ResponseEntity<List<INodeValue>> filterBirthdateTree(@RequestParam("startDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
+																@RequestParam("endDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate) {
 		final List<INodeValue> nodes = treeService.filterByBirthdatePeriod(startDate, endDate);
 		return ResponseEntity.ok(nodes);
 	}
