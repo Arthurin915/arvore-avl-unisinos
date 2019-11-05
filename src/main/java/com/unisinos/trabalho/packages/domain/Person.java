@@ -1,5 +1,6 @@
 package com.unisinos.trabalho.packages.domain;
 
+import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 
 /**
@@ -19,16 +20,20 @@ public class Person {
         this.cidadeNascimento = cidadeNascimento;
     }
 
+    @NotNull
     private String cpf;
 
+    @NotNull
     private String rg;
 
+    @NotNull
     private String name;
 
+    @NotNull
     private LocalDate dataNascimento;
 
+    @NotNull
     private String cidadeNascimento;
-
 
     public String getCpf() {
         return cpf;

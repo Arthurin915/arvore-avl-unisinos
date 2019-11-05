@@ -25,4 +25,6 @@ public interface TreeService {
     List<INodeValue> filterByName(String name);
 
     INodeValue filterByCpf(String cpf);
+
+	void clear();
 }

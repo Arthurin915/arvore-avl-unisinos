@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -62,8 +63,14 @@ public class MainController {
 	}
 
 	@PostMapping("/people")
-	public ResponseEntity postPeople(@RequestBody List<Person> people) {
+	public ResponseEntity postPeople(@RequestBody @Valid List<Person> people) {
 		treeService.insertPeople(people);
+		return ResponseEntity.ok().build();
+	}
+
+	@PostMapping("/clear")
+	public ResponseEntity clear() {
+		treeService.clear();
 		return ResponseEntity.ok().build();
 	}
 
