@@ -51,17 +51,32 @@
       <div class="level-1">
         <div v-if="arvore && arvore.key" class="">
           <node>
-            {{arvore.key.value}}
+            <div v-if="selectedFilter=='birthdate'">
+              {{arvore.key.value | moment('DD/MM/YYYY')}}
+            </div>
+            <div v-else>
+              {{arvore.key.value}}
+            </div>
           </node>
         </div>
       </div>
       <div class="level-2">
         <node v-if="arvore && arvore.left">
-          {{arvore.left.key.value}}
+          <div v-if="selectedFilter=='birthdate'">
+            {{arvore.left.key.value | moment('DD/MM/YYYY')}}
+          </div>
+          <div v-else>
+            {{arvore.left.key.value}}
+          </div>
         </node>
         <empty-node v-else/>
         <node v-if="arvore && arvore.right">
-          {{arvore.right.key.value}}            
+          <div v-if="selectedFilter=='birthdate'">
+            {{arvore.right.key.value | moment('DD/MM/YYYY')}}
+          </div>
+          <div v-else>
+            {{arvore.right.key.value}}            
+          </div>
         </node> 
         <empty-node v-else/>
       </div>
@@ -69,13 +84,23 @@
         <div class="left-children-container">
           <div class="left-left-children mr-4">
             <node v-if="arvore && arvore.left && arvore.left.left">
-              {{arvore.left.left.key.value}}
+              <div v-if="selectedFilter=='birthdate'">
+                {{arvore.left.left.key.value | moment('DD/MM/YYYY')}}
+              </div>
+              <div v-else>
+                {{arvore.left.left.key.value}}
+              </div>
             </node>
             <empty-node v-else/>
           </div>
           <div class="left-right-children">
             <node v-if="arvore && arvore.left && arvore.left.right">
-              {{arvore.left.right.key.value}}
+              <div v-if="selectedFilter=='birthdate'">
+                {{arvore.left.right.key.value | moment('DD/MM/YYYY')}}
+              </div>
+              <div v-else>
+                {{arvore.left.right.key.value}}
+              </div>
             </node>   
             <empty-node v-else/>
           </div>
@@ -83,13 +108,23 @@
         <div class="right-children-container">
           <div class="right-left-children mr-4">
             <node v-if="arvore && arvore.right && arvore.right.left">
-              {{arvore.right.left.key.value}}
+              <div v-if="selectedFilter=='birthdate'">
+                {{arvore.right.left.key.value | moment('DD/MM/YYYY')}}
+              </div>
+              <div v-else>
+                {{arvore.right.left.key.value}}
+              </div>
             </node> 
             <empty-node v-else/>
           </div>
           <div class="right-right-children">
             <node v-if="arvore && arvore.right && arvore.right.right">
-              {{arvore.right.right.key.value}}   
+              <div v-if="selectedFilter=='birthdate'">
+                {{arvore.right.right.key.value | moment('DD/MM/YYYY')}}
+              </div>
+              <div v-else>
+                {{arvore.right.right.key.value}}   
+              </div>
             </node>
             <empty-node v-else/>
           </div>
@@ -101,24 +136,46 @@
       <div v-else>
         <h3>Resultados encontrados:</h3>
         <div class='d-flex flex-wrap mt-3' v-if="selectedFilter == 'name'">
-          <node v-for="(node, index) in filterResults" :key="index" class="mr-3">
-            {{node.value}}
-          </node>
+          <div v-for="(node, index) in filterResults" :key="index" class="mr-3 d-flex">
+            <div class="result-container">
+              <div>Nome: {{pessoas[node.index].name}}</div>
+              <div class="ml-2">CPF: {{pessoas[node.index].cpf}}</div>
+              <div class="ml-2">RG: {{pessoas[node.index].rg}}</div>
+              <div class="ml-2">Data de Nascimento: {{pessoas[node.index].dataNascimento | moment('DD/MM/YYYY')}}</div>
+              <div class="ml-2">Cidade: {{pessoas[node.index].cidadeNascimento}}</div>
+            </div>
+          </div>
         </div>
         <div v-else-if="selectedFilter == 'cpf'">
-          <node>
-            {{filterResults ? filterResults.value : ''}}
-          </node>
+          <div class="result-container">
+            <div>Nome: {{pessoas[filterResults.index].name}}</div>
+            <div class="ml-2">CPF: {{pessoas[filterResults.index].cpf}}</div>
+            <div class="ml-2">RG: {{pessoas[filterResults.index].rg}}</div>
+            <div class="ml-2">Data de Nascimento: {{pessoas[filterResults.index].dataNascimento}}</div>
+            <div class="ml-2">Cidade: {{pessoas[filterResults.index].cidadeNascimento}}</div>
+          </div>
+            
+          
         </div>
         <div v-else-if="selectedFilter == 'birthdate'">
           <div class='d-flex flex-wrap mt-3'>
-            <node v-for="(node, index) in filterResults" :key="index" class="mr-3">
-              {{node.value}}
-            </node>
+            <div v-for="(node, index) in filterResults" :key="index" class="mr-3 d-flex">
+              <div class="result-container">
+                <div>Nome: {{pessoas[node.index].name}}</div>
+                <div class="ml-2">CPF: {{pessoas[node.index].cpf}}</div>
+                <div class="ml-2">RG: {{pessoas[node.index].rg}}</div>
+                <div class="ml-2">Data de Nascimento: {{pessoas[node.index].dataNascimento | moment('DD/MM/YYYY') }}</div>
+                <div class="ml-2">Cidade: {{pessoas[node.index].cidadeNascimento}}</div>
+              </div>
+
+            </div>
           </div>
         </div>
       </div>
     </section>
+    <marquee v-if="alienDancando">
+      <img src="https://media.tenor.com/images/026e2ff33b229671d579dd512dcac521/tenor.gif" alt="">
+    </marquee>
   </main>
 </template>
 
@@ -133,6 +190,9 @@ export default {
   },
   data: () => ({
     file: null,
+    timer: null,
+    alienDancando: false,
+    pessoas: [],
     start: new Date(),
     end: new Date(),
     filtering: false,
@@ -189,13 +249,17 @@ export default {
     async sendFileData() {
       try {
         const res = await global.$post("/people", this.pessoaArr)
-        alert('Arquivo enviado com sucesso')
-        this.getTree()
+        this.alienDancando = true
+        this.getPeople()        
       } catch(err) {
         console.log(err)
         alert('erro!')
-
-      } 
+      } finally {
+        this.timer = setTimeout(() => {
+          this.alienDancando = false
+          this.getTree()
+        }, 5000)
+      }
     },
     async filterTree() {
       const requestParam = this.getRequestParam()
@@ -220,7 +284,14 @@ export default {
         alert('erro!', err)       
       } 
     },
-    async getTree() {
+    async getPeople() {
+      try {
+        const res = await global.$get('/people')
+        this.pessoas = res.data
+      } catch(err) {
+        alert('erro!', err)       
+      } 
+    },async getTree() {
       try {
         const res = await global.$get(`/tree/${this.selectedFilter}`)
         this.arvore = res.data.root
@@ -272,20 +343,20 @@ export default {
   .level-2 {
     display: flex;
     justify-content: space-between;
-    width: 40%;
+    width: 50%;
   }
   .level-3 {
     margin-top: 2rem;
     display: flex;
     justify-content: space-between;
-    width: 50%;
+    width: 65%;
     .left-children-container {
       display: flex;
-      width: 35%;
+      width: 20%;
     }
     .right-children-container {
       display: flex;
-      width: 35%;
+      width: 40%;
     }
   }
 @media (max-width: 1024px) {
@@ -316,5 +387,10 @@ export default {
     } 
   }
 }
+}
+.result-container {
+  background-color: #dbdbdb;
+  padding: 1rem;
+  margin: 10px;
 }
 </style>
