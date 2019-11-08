@@ -81,63 +81,6 @@ class BinaryTreeTest {
 	}
 
 	@Test
-	void isBalanced_deleting_right() {
-		// Arrange
-		BinaryTree binaryTree = new BinaryTree();
-		final StringKey stringKey6 = new StringKey("6");
-		final StringKey stringKey7 = new StringKey("7");
-
-		// Act
-		binaryTree.insert(new StringKey("1"));
-		binaryTree.insert(new StringKey("2"));
-		binaryTree.insert(new StringKey("3"));
-		binaryTree.insert(new StringKey("4"));
-		binaryTree.insert(new StringKey("5"));
-		binaryTree.insert(stringKey6);
-		binaryTree.insert(stringKey7);
-
-		// Assert
-		Node rootBeforeDelete = binaryTree.getRoot();
-
-		Assert.isTrue(rootBeforeDelete.getRight().getKey() == stringKey6);
-
-		// Act
-		binaryTree.delete(stringKey6);
-
-		// Assert
-		Assert.isTrue(binaryTree.isBalanced());
-
-		Node rootAfterDelete = binaryTree.getRoot();
-		Assert.isTrue(rootAfterDelete.getRight().getKey() == stringKey7);
-	}
-
-	@Test
-	void isBalanced_deleting_left() {
-		// Arrange
-		BinaryTree binaryTree = new BinaryTree();
-
-		// Act
-		binaryTree.insert(new StringKey("1"));
-		binaryTree.insert(new StringKey("2"));
-		binaryTree.insert(new StringKey("3"));
-		binaryTree.insert(new StringKey("4"));
-		binaryTree.insert(new StringKey("5"));
-		binaryTree.insert(new StringKey("6"));
-		binaryTree.insert(new StringKey("7"));
-
-		// Act
-		binaryTree.delete(new StringKey("1"));
-		binaryTree.delete(new StringKey("2"));
-		binaryTree.delete(new StringKey("3"));
-
-		// Assert
-		Assert.isTrue(binaryTree.isBalanced());
-		final Node root = binaryTree.getRoot();
-
-		Assert.isTrue(root.getLeft() == null);
-	}
-
-	@Test
 	void inOrder() {
 		// Arrange
 		BinaryTree binaryTree = new BinaryTree();

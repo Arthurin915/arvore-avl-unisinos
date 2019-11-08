@@ -22,10 +22,6 @@ public class BinaryTree {
 		}
 	}
 
-	public Node delete(INodeValue val) {
-		return delete(this.root, val);
-	}
-
 	public List<INodeValue> inOrder() {
 		List<INodeValue> inOrderList = new ArrayList<>();
 		if (root == null) {
@@ -112,21 +108,21 @@ public class BinaryTree {
 	}
 
 	private Node balanceTree(Node node, INodeValue val, int balance) {
-		// Left Left Case
+		// Left Left
 		if (balance > 1 && val.compareTo(node.getLeft().getKey()) < 0)
 			return rightRotate(node);
 
-		// Right Right Case
+		// Right Right
 		if (balance < -1 && val.compareTo(node.getRight().getKey()) > 0)
 			return leftRotate(node);
 
-		// Left Right Case
+		// Left Right
 		if (balance > 1 && val.compareTo(node.getLeft().getKey()) > 0) {
 			node.setLeft(leftRotate(node.getLeft()));
 			return rightRotate(node);
 		}
 
-		// Right Left Case
+		// Right Left
 		if (balance  < -1 && val.compareTo(node.getRight().getKey()) < 0) {
 			node.setRight(rightRotate(node.getRight()));
 			return leftRotate(node);
@@ -135,45 +131,6 @@ public class BinaryTree {
 		return node;
 	}
 
-	private Node delete(Node node, INodeValue val) {
-		if (node == null) return null;
-
-		// Deleta à esquerda
-		if (val.compareTo(node.getKey()) < 0) node.setLeft(delete(node.getLeft(), val));
-		// Deleta à direita
-		else if (val.compareTo(node.getKey()) > 0) node.setRight(delete(node.getRight(), val));
-		// Nodo a ser deletado
-		else {
-			// Caso nodo só tem um ou nenhum filho
-			if (node.getLeft() == null || node.getRight() == null) {
-				// Seta o único filho ou null encima do nodo
-				node = Optional.ofNullable(node.getLeft()).orElse(node.getRight());
-			}
-			// Tem dois filhos
-			else {
-				// Pega o menor valor da direita do nodo
-				final Node leftMostNode = getLeftMostNode(node.getRight());
-
-				// Copia o valor da referencia
-				node.setKey(leftMostNode.getKey());
-
-				// Deleta o valor original
-				node.setRight(delete(node.getRight(), node.getKey()));
-			}
-		}
-
-		// Se era o ultimo nodo
-		if (node == null) return null;
-
-		return checkTreeBalance(node, val);
-	}
-
-	private Node getLeftMostNode(Node node) {
-		if (node.getLeft() != null) return getLeftMostNode(node);
-		return node;
-	}
-
-	// Get Balance factor of node N
 	private int getBalance(Node node) {
 		if (node == null) return 0;
 		return height(node.getLeft()) - height(node.getRight());
