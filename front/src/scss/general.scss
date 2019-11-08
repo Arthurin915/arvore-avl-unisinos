@@ -1,0 +1,22 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+html, body, #app {
+   min-height: 100vh; height: auto; width: 100%; 
+}
+main {
+  padding: 1rem;
+}
+input {
+  outline: none;
+  border: none;
+}
+.node {
+  border-radius: 50%;
+  width: 120px;
+  height: 120px;
+  line-break: auto;
+  box-shadow: .5px .5px 4px;
+}
